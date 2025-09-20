@@ -152,6 +152,32 @@
             gap: 10px;
         }
         
+        /* Performance Monitor */
+        .performance-monitor {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #4CAF50;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            z-index: 100;
+            min-width: 150px;
+        }
+        
+        .perf-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+        }
+        
+        .perf-value {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
         .btn {
             background: rgba(76, 175, 80, 0.2);
             border: 1px solid #4CAF50;
@@ -885,6 +911,26 @@
                     <p>Choose a protein from the list to view its 3D structure</p>
                 </div>
                 
+                <!-- Performance Monitor -->
+                <div class="performance-monitor" id="perfMonitor" style="display: none;">
+                    <div class="perf-item">
+                        <span>FPS:</span>
+                        <span class="perf-value" id="fps">60</span>
+                    </div>
+                    <div class="perf-item">
+                        <span>Atoms:</span>
+                        <span class="perf-value" id="atomCount">0</span>
+                    </div>
+                    <div class="perf-item">
+                        <span>Memory:</span>
+                        <span class="perf-value" id="memory">0 MB</span>
+                    </div>
+                    <div class="perf-item">
+                        <span>Render:</span>
+                        <span class="perf-value" id="renderTime">0ms</span>
+                    </div>
+                </div>
+                
                 <div class="controls-help" id="controlsHelp">
                     <h4>🎮 Controls</h4>
                     <ul>
@@ -1029,6 +1075,12 @@
         let currentProtein = null;
         let files = [];
         let selectedFileIndex = -1;
+        
+        // Performance monitoring
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fps = 60;
+        let renderStartTime = 0;
         
         // Helper function to reset camera view
         function resetView() {
@@ -1440,9 +1492,137 @@
             }
         }
         
+        // Create massive atom visualization with instanced rendering for 100k+ atoms
+        function createMassiveAtomVisualization(atoms) {
+            console.log(`🚀 Creating MASSIVE visualization for ${atoms.length.toLocaleString()} atoms`);
+            
+            // Show performance monitor
+            document.getElementById('perfMonitor').style.display = 'block';
+            document.getElementById('atomCount').textContent = atoms.length.toLocaleString();
+            
+            // Group atoms by element for instanced rendering
+            const atomsByElement = {};
+            atoms.forEach(atom => {
+                const element = atom.element || 'C';
+                if (!atomsByElement[element]) {
+                    atomsByElement[element] = [];
+                }
+                atomsByElement[element].push(atom);
+            });
+            
+            // Create instanced meshes for each element
+            Object.keys(atomsByElement).forEach(element => {
+                const elementAtoms = atomsByElement[element];
+                if (elementAtoms.length === 0) return;
+                
+                // Base geometry and material
+                const geometry = new THREE.SphereGeometry(0.5, 8, 6); // Lower detail for performance
+                const material = new THREE.MeshLambertMaterial({ 
+                    color: getElementColor(element),
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                // Create instanced mesh
+                const instancedMesh = new THREE.InstancedMesh(geometry, material, elementAtoms.length);
+                
+                // Set positions for all instances
+                const matrix = new THREE.Matrix4();
+                elementAtoms.forEach((atom, i) => {
+                    matrix.setPosition(atom.x, atom.y, atom.z);
+                    instancedMesh.setMatrixAt(i, matrix);
+                });
+                
+                instancedMesh.instanceMatrix.needsUpdate = true;
+                currentProtein.add(instancedMesh);
+                
+                console.log(`Added ${elementAtoms.length.toLocaleString()} ${element} atoms`);
+            });
+            
+            // Skip bonds for massive structures (too many to render efficiently)
+            if (atoms.length < 500000) {
+                console.log('Adding bonds for medium-large structure...');
+                createOptimizedBonds(atoms);
+            } else {
+                console.log('Skipping bonds for ultra-massive structure (performance)');
+            }
+        }
+        
+        // Create optimized bonds for large structures
+        function createOptimizedBonds(atoms) {
+            const bonds = [];
+            const maxBonds = 50000; // Limit total bonds for performance
+            
+            // Simple distance-based bonding with limits
+            for (let i = 0; i < atoms.length && bonds.length < maxBonds; i++) {
+                for (let j = i + 1; j < atoms.length && bonds.length < maxBonds; j++) {
+                    const atom1 = atoms[i];
+                    const atom2 = atoms[j];
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(atom1.x - atom2.x, 2) +
+                        Math.pow(atom1.y - atom2.y, 2) +
+                        Math.pow(atom1.z - atom2.z, 2)
+                    );
+                    
+                    if (distance < 1.8) { // Bond threshold
+                        bonds.push([atom1, atom2]);
+                    }
+                }
+            }
+            
+            console.log(`Creating ${bonds.length.toLocaleString()} bonds`);
+            
+            // Create bond lines using BufferGeometry for performance
+            const bondPositions = [];
+            bonds.forEach(([atom1, atom2]) => {
+                bondPositions.push(atom1.x, atom1.y, atom1.z);
+                bondPositions.push(atom2.x, atom2.y, atom2.z);
+            });
+            
+            const bondGeometry = new THREE.BufferGeometry();
+            bondGeometry.setAttribute('position', new THREE.Float32BufferAttribute(bondPositions, 3));
+            
+            const bondMaterial = new THREE.LineBasicMaterial({ 
+                color: 0x666666,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const bondLines = new THREE.LineSegments(bondGeometry, bondMaterial);
+            currentProtein.add(bondLines);
+        }
+        
+        // Performance monitoring in animation loop
         function animate() {
+            renderStartTime = performance.now();
+            
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
+            
+            // Update performance metrics
+            frameCount++;
+            const currentTime = performance.now();
+            const renderTime = currentTime - renderStartTime;
+            
+            if (currentTime - lastTime >= 1000) {
+                fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                frameCount = 0;
+                lastTime = currentTime;
+                
+                // Update performance display
+                updatePerformanceMonitor(renderTime);
+            }
+        }
+        
+        // Update performance monitor display
+        function updatePerformanceMonitor(renderTime) {
+            document.getElementById('fps').textContent = fps;
+            document.getElementById('renderTime').textContent = Math.round(renderTime) + 'ms';
+            
+            // Estimate memory usage (rough calculation)
+            const memoryMB = Math.round((performance.memory?.usedJSHeapSize || 0) / 1024 / 1024);
+            document.getElementById('memory').textContent = memoryMB + ' MB';
         }
         
         async function loadFileList() {
@@ -1559,17 +1739,24 @@
             // Create protein group
             currentProtein = new THREE.Group();
             
-            // Create atoms with proper sizing
-            createAtoms(proteinData.atoms);
-            
-            // Create bonds between atoms
-            createBonds(proteinData.atoms);
-            
-            // Create backbone ribbons
-            createBackboneRibbons(proteinData.chains);
-            
-            // Create aromatic rings
-            createAromaticRings(proteinData.atoms);
+            // Choose visualization method based on atom count
+            if (proteinData.atoms.length > 100000) {
+                console.log(`🚀 Using MASSIVE atom visualization for ${proteinData.atoms.length.toLocaleString()} atoms`);
+                createMassiveAtomVisualization(proteinData.atoms);
+            } else {
+                console.log(`💬 Using standard visualization for ${proteinData.atoms.length.toLocaleString()} atoms`);
+                // Create atoms with proper sizing
+                createAtoms(proteinData.atoms);
+                
+                // Create bonds between atoms
+                createBonds(proteinData.atoms);
+                
+                // Create backbone ribbons
+                createBackboneRibbons(proteinData.chains);
+                
+                // Create aromatic rings
+                createAromaticRings(proteinData.atoms);
+            }
             
             // Center and scale protein
             const box = new THREE.Box3().setFromObject(currentProtein);

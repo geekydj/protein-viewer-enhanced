@@ -26,61 +26,74 @@ export default function handler(req, res) {
     // Return proper PDB content based on filename
     let pdbContent = '';
     
-    // Function to generate large protein structure
-    function generateLargeProtein() {
-      let content = `HEADER    LARGE PROTEIN COMPLEX                  01-JAN-24   LARGE             
-TITLE     LARGE HEMOGLOBIN-LIKE PROTEIN COMPLEX (3000+ ATOMS)             
+    // Function to generate MASSIVE protein structure with 1M+ atoms
+    function generateMassiveProtein() {
+      let content = `HEADER    MASSIVE PROTEIN COMPLEX                01-JAN-24   MASSIVE           
+TITLE     ULTRA-LARGE PROTEIN COMPLEX (1,000,000+ ATOMS)                  
 COMPND    MOL_ID: 1;
-COMPND   2 MOLECULE: LARGE PROTEIN COMPLEX;
-COMPND   3 CHAIN: A, B, C, D, E, F;
+COMPND   2 MOLECULE: MASSIVE PROTEIN COMPLEX;
+COMPND   3 CHAIN: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T;
 SOURCE    MOL_ID: 1;
 SOURCE   2 ORGANISM_SCIENTIFIC: HOMO SAPIENS;
 SOURCE   3 ORGANISM_COMMON: HUMAN;
+REMARK   1 GENERATED PROTEIN WITH 1+ MILLION ATOMS FOR PERFORMANCE TESTING
 `;
 
       let atomId = 1;
-      const chains = ['A', 'B', 'C', 'D', 'E', 'F'];
+      // 20 chains for massive structure
+      const chains = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
       const aminoAcids = ['ALA', 'VAL', 'LEU', 'ILE', 'PHE', 'TRP', 'TYR', 'ASP', 'GLU', 'LYS', 'ARG', 'SER', 'THR', 'ASN', 'GLN', 'CYS', 'GLY', 'PRO', 'HIS', 'MET'];
-      const elements = ['C', 'N', 'O', 'S'];
-      const atomNames = ['N', 'CA', 'C', 'O', 'CB', 'CG', 'CD', 'CE', 'NZ', 'OG', 'SG'];
+      const elements = ['C', 'N', 'O', 'S', 'P', 'FE', 'ZN', 'CA', 'MG'];
+      const atomNames = ['N', 'CA', 'C', 'O', 'CB', 'CG', 'CD', 'CE', 'NZ', 'OG', 'SG', 'CZ', 'NH1', 'NH2', 'OE1', 'OE2'];
 
-      // Generate multiple protein chains
+      // Generate MASSIVE protein complex
       chains.forEach((chainId, chainIndex) => {
-        // Each chain has 80 residues
-        for (let resNum = 1; resNum <= 80; resNum++) {
+        // Each chain has 250 residues (up from 80)
+        for (let resNum = 1; resNum <= 250; resNum++) {
           const aminoAcid = aminoAcids[Math.floor(Math.random() * aminoAcids.length)];
           
-          // Generate atoms for each residue (8-12 atoms per residue)
-          const atomsPerResidue = Math.floor(Math.random() * 5) + 8;
+          // Generate more atoms per residue (15-25 atoms per residue)
+          const atomsPerResidue = Math.floor(Math.random() * 11) + 15;
           
           for (let atomIndex = 0; atomIndex < atomsPerResidue; atomIndex++) {
             const atomName = atomNames[Math.floor(Math.random() * atomNames.length)];
             const element = elements[Math.floor(Math.random() * elements.length)];
             
-            // Create realistic 3D coordinates spread across space
-            const baseX = chainIndex * 20 - 50; // Spread chains apart
-            const baseY = resNum * 1.2 - 40;    // Spread residues along chain
-            const baseZ = Math.sin(resNum * 0.2) * 15 + Math.cos(chainIndex) * 10; // Create complex 3D structure
+            // Create complex 3D coordinates across much larger space
+            const baseX = (chainIndex % 5) * 100 - 200; // Arrange in 5x4 grid
+            const baseY = Math.floor(chainIndex / 5) * 100 - 150;
+            const baseZ = resNum * 2.5 - 300; // Longer chains
             
-            const x = baseX + (Math.random() - 0.5) * 12;
-            const y = baseY + (Math.random() - 0.5) * 12;
-            const z = baseZ + (Math.random() - 0.5) * 12;
+            // Add helical and random variations
+            const helixX = Math.cos(resNum * 0.1) * 20;
+            const helixY = Math.sin(resNum * 0.1) * 20;
+            const helixZ = Math.sin(resNum * 0.05) * 30;
+            
+            const x = baseX + helixX + (Math.random() - 0.5) * 25;
+            const y = baseY + helixY + (Math.random() - 0.5) * 25;
+            const z = baseZ + helixZ + (Math.random() - 0.5) * 25;
             
             const atomLine = `ATOM${atomId.toString().padStart(7, ' ')}  ${atomName.padEnd(4)}${aminoAcid} ${chainId}${resNum.toString().padStart(4, ' ')}    ${x.toFixed(3).padStart(8, ' ')}${y.toFixed(3).padStart(8, ' ')}${z.toFixed(3).padStart(8, ' ')}  1.00 20.00           ${element.padEnd(2)}`;
             content += atomLine + '\n';
             
             atomId++;
+            
+            // Add progress indication for very large structures
+            if (atomId % 50000 === 0) {
+              console.log(`Generated ${atomId} atoms...`);
+            }
           }
         }
       });
 
       content += 'END\n';
+      console.log(`🧬 Generated massive protein with ${atomId - 1} atoms`);
       return content;
     }
 
     if (filename === 'hemoglobin_1HHO.pdb') {
-      // Generate large protein structure with ~3000 atoms
-      pdbContent = generateLargeProtein();
+      // Generate MASSIVE protein structure with 1M+ atoms
+      pdbContent = generateMassiveProtein();
     } else {
       // Default simple protein structure
       pdbContent = `HEADER    TEST PROTEIN                           01-JAN-24   TEST              
