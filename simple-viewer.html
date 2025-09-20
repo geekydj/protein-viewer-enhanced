@@ -1195,9 +1195,9 @@
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x0a0a0a);
             
-            // Camera setup
-            camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-            camera.position.set(0, 0, 50);
+            // Camera setup  
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(0, 0, 30);
             
             // Renderer setup
             renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -1242,7 +1242,7 @@
             let mouseX = 0, mouseY = 0;
             let rotationX = 0, rotationY = 0;
             let rotationVelocityX = 0, rotationVelocityY = 0;
-            let cameraDistance = 50;
+            let cameraDistance = 30;
             
             const container = document.getElementById('viewer-container');
             
@@ -1334,10 +1334,10 @@
             container.addEventListener('wheel', (event) => {
                 event.preventDefault();
                 
-                const zoomSpeed = 0.002;
+                const zoomSpeed = 0.001;
                 const zoomDelta = event.deltaY * zoomSpeed;
                 cameraDistance += zoomDelta * cameraDistance; // Proportional zoom
-                cameraDistance = Math.max(5, Math.min(200, cameraDistance));
+                cameraDistance = Math.max(3, Math.min(100, cameraDistance));
                 
                 // Smooth zoom animation
                 gsap.to(camera.position, {
@@ -1702,18 +1702,22 @@
             }
         }
         
-        // Create atoms with proper van der Waals radii
+        // Create atoms with enhanced visibility
         function createAtoms(atoms) {
             const vdwRadii = {
-                'H': 0.3, 'C': 0.4, 'N': 0.35, 'O': 0.32, 'S': 0.5,
-                'P': 0.45, 'F': 0.3, 'CL': 0.45, 'BR': 0.5, 'I': 0.55
+                'H': 0.6, 'C': 0.8, 'N': 0.7, 'O': 0.65, 'S': 1.0,
+                'P': 0.9, 'F': 0.6, 'CL': 0.9, 'BR': 1.0, 'I': 1.1
             };
             
             atoms.forEach(atom => {
-                const radius = vdwRadii[atom.element.toUpperCase()] || 0.4;
-                const geometry = new THREE.SphereGeometry(radius, 16, 12);
+                const radius = vdwRadii[atom.element.toUpperCase()] || 0.8;
+                const geometry = new THREE.SphereGeometry(radius, 20, 16);
                 const color = getElementColor(atom.element);
-                const material = new THREE.MeshLambertMaterial({ color });
+                const material = new THREE.MeshLambertMaterial({ 
+                    color,
+                    shininess: 30,
+                    specular: 0x111111
+                });
                 const sphere = new THREE.Mesh(geometry, material);
                 
                 sphere.position.set(atom.x, atom.y, atom.z);
@@ -1731,8 +1735,11 @@
                         const end = new THREE.Vector3(bondedAtom.x, bondedAtom.y, bondedAtom.z);
                         
                         const distance = start.distanceTo(end);
-                        const geometry = new THREE.CylinderGeometry(0.05, 0.05, distance, 8);
-                        const material = new THREE.MeshLambertMaterial({ color: 0x666666 });
+                        const geometry = new THREE.CylinderGeometry(0.1, 0.1, distance, 12);
+                        const material = new THREE.MeshLambertMaterial({ 
+                            color: 0x999999,
+                            shininess: 20
+                        });
                         const bond = new THREE.Mesh(geometry, material);
                         
                         // Position and orient the bond
@@ -1882,9 +1889,13 @@
         }
         
         function resetView() {
-            camera.position.set(0, 0, 50);
+            camera.position.set(0, 0, 30);
             if (currentProtein) {
                 currentProtein.rotation.set(0, 0, 0);
+                // Center the protein in view
+                const box = new THREE.Box3().setFromObject(currentProtein);
+                const center = box.getCenter(new THREE.Vector3());
+                currentProtein.position.sub(center);
             }
         }
         
