@@ -1,0 +1,19 @@
+HEADER    ELECTRON TRANSPORT                      01-JUN-89   1ABC              
+TITLE     TEST PROTEIN STRUCTURE                                             
+ATOM      1  N   ALA A   1      20.154  16.967  15.691  1.00 11.99           N  
+ATOM      2  CA  ALA A   1      20.689  18.311  15.984  1.00 11.52           C  
+ATOM      3  C   ALA A   1      19.618  19.379  15.765  1.00 11.39           C  
+ATOM      4  O   ALA A   1      18.461  19.164  15.421  1.00 11.96           O  
+ATOM      5  CB  ALA A   1      21.855  18.564  15.027  1.00 11.48           C  
+ATOM      6  N   ARG A   2      19.944  20.613  15.981  1.00 11.14           N  
+ATOM      7  CA  ARG A   2      18.975  21.729  15.800  1.00 10.89           C  
+ATOM      8  C   ARG A   2      19.619  23.040  15.393  1.00 10.53           C  
+ATOM      9  O   ARG A   2      20.835  23.150  15.240  1.00 10.42           O  
+ATOM     10  CB  ARG A   2      18.193  21.998  17.094  1.00 10.91           C  
+ATOM     11  CG  ARG A   2      17.467  20.755  17.580  1.00 10.91           C  
+ATOM     12  CD  ARG A   2      16.677  21.024  18.856  1.00 11.32           C  
+ATOM     13  NE  ARG A   2      15.939  19.826  19.295  1.00 11.66           N  
+ATOM     14  CZ  ARG A   2      15.195  19.790  20.400  1.00 11.95           C  
+ATOM     15  NH1 ARG A   2      15.098  20.872  21.180  1.00 12.09           N  
+ATOM     16  NH2 ARG A   2      14.534  18.671  20.658  1.00 12.07           N  
+END

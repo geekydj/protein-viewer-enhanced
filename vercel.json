@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "name": "protein-viewer-enhanced",
+  "functions": {
+    "server/index.ts": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server/index.ts"
+    },
+    {
+      "src": "/",
+      "dest": "/landing.html"
+    },
+    {
+      "src": "/upload",
+      "dest": "/upload.html"
+    },
+    {
+      "src": "/viewer",
+      "dest": "/simple-viewer.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "builds": [
+    {
+      "src": "server/index.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.pdb",
+      "use": "@vercel/static"
+    }
+  ]
+}

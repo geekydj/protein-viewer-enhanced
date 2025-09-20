@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 Protein Analysis Hub - Molecular Visualization Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, rgba(76, 175, 80, 0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(33, 150, 243, 0.3), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(156, 39, 176, 0.3), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(76, 175, 80, 0.3), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(33, 150, 243, 0.3), transparent);
+            background-repeat: repeat;
+            background-size: 200px 150px;
+            animation: particle-move 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes particle-move {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-200px, -150px) rotate(360deg); }
+        }
+        
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header Section */
+        .header {
+            padding: 60px 20px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(76, 175, 80, 0.3);
+            box-shadow: 0 4px 30px rgba(76, 175, 80, 0.1);
+        }
+        
+        .hero-title {
+            font-size: 4em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            text-shadow: 
+                0 0 10px rgba(76, 175, 80, 0.8),
+                0 0 20px rgba(76, 175, 80, 0.6),
+                0 0 30px rgba(76, 175, 80, 0.4);
+            letter-spacing: -0.02em;
+            animation: glow-pulse 3s ease-in-out infinite alternate;
+            transform-origin: center;
+            opacity: 1 !important;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        /* Title character animation */
+        .hero-title .char {
+            display: inline-block;
+            opacity: 1; /* Ensure character visibility */
+            color: inherit; /* Inherit color from parent */
+            animation: char-bounce 2s ease-in-out infinite;
+            animation-delay: calc(var(--char-index) * 0.1s);
+        }
+        
+        @keyframes glow-pulse {
+            0% { filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)); }
+            100% { filter: drop-shadow(0 0 40px rgba(76, 175, 80, 0.6)); }
+        }
+        
+        
+        @keyframes char-bounce {
+            0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+            25% { transform: translateY(-4px) rotateZ(1deg); }
+            50% { transform: translateY(-8px) rotateZ(-1deg); }
+            75% { transform: translateY(-2px) rotateZ(0.5deg); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #4CAF50;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .services-section {
+            margin-bottom: 80px;
+        }
+        
+        .section-title {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 50px;
+            color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.1), transparent, rgba(33, 150, 243, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(76, 175, 80, 0.6);
+            box-shadow: 0 25px 50px rgba(76, 175, 80, 0.3), 0 0 30px rgba(76, 175, 80, 0.2);
+        }
+        
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-icon {
+            font-size: 4em;
+            margin-bottom: 25px;
+            display: block;
+            text-align: center;
+            filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.5));
+        }
+        
+        .service-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            text-align: center;
+        }
+        
+        .service-description {
+            opacity: 0.9;
+            line-height: 1.7;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .service-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .service-features li {
+            padding: 8px 0;
+            opacity: 0.8;
+            font-size: 0.9em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .service-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .service-features li::before {
+            content: '✓';
+            color: #4CAF50;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        /* Features Section */
+        .features-section {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(22, 33, 62, 0.4));
+            border-radius: 20px;
+            padding: 50px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            margin-bottom: 60px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(76, 175, 80, 0.5);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+        
+        .feature-description {
+            opacity: 0.8;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        
+        /* Status Bar */
+        .status-section {
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.2), rgba(33, 150, 243, 0.2));
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.1);
+        }
+        
+        .status-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #4CAF50;
+        }
+        
+        .status-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2em;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .features-section {
+                padding: 30px 20px;
+            }
+            
+            .stats-row {
+                gap: 20px;
+            }
+            
+            .stat-item {
+                padding: 12px;
+            }
+            
+            .section-title {
+                font-size: 2em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .content {
+                padding: 40px 15px;
+            }
+            
+            .hero-title {
+                font-size: 2em;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .service-card {
+                padding: 25px;
+            }
+        }
+        
+        /* Team Footer */
+        .team-footer {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(22, 33, 62, 0.9));
+            backdrop-filter: blur(20px);
+            border-top: 2px solid rgba(76, 175, 80, 0.3);
+            padding: 40px 20px 20px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .team-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(76, 175, 80, 0.03) 0%, transparent 50%, rgba(33, 150, 243, 0.03) 100%);
+            pointer-events: none;
+        }
+        
+        .team-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .team-title {
+            text-align: center;
+            font-size: 2em;
+            color: #4CAF50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .team-member {
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 50%, 
+                rgba(255, 255, 255, 0.02) 100%
+            );
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(76, 175, 80, 0.1);
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Dhairya specific base styling with neon pink theme */
+        .team-member.dhairya {
+            border: 1px solid rgba(255, 20, 147, 0.5);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 20, 147, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(255, 20, 147, 0.3);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(76, 175, 80, 0.6);
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 255, 255, 0.15) 0%, 
+                rgba(255, 255, 255, 0.08) 50%, 
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            box-shadow: 
+                0 20px 40px rgba(76, 175, 80, 0.2),
+                0 0 40px rgba(76, 175, 80, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 0 1px rgba(76, 175, 80, 0.3);
+            backdrop-filter: blur(20px);
+        }
+        
+        .member-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .member-role {
+            font-size: 0.9em;
+            color: #4CAF50;
+            opacity: 0.9;
+        }
+        
+        /* Base team member enhanced styling */
+        .team-member {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* DHAIRYA SPECIAL - GIF Background */
+        .team-member.dhairya::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: url('https://64.media.tumblr.com/32edd707f1f77165188c11874ed96093/3a101de9ddf59457-ee/s250x400/d25b48bb1beac32177e8b4eb0d8134ff11f76137.gif');
+            background-size: contain;
+            background-position: calc(100% + 5px) center;
+            background-repeat: no-repeat;
+            opacity: 0.25;
+            border-radius: 14px;
+            z-index: -1;
+            filter: blur(0.5px);
+            transform: scaleX(-1);
+        }
+        
+        .team-member.dhairya::after {
+            content: '{ }';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7em;
+            color: rgba(255, 20, 147, 0.6);
+            animation: code-float 3s ease-in-out infinite;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
+        }
+        
+        .team-member.dhairya .member-name::after {
+            content: '█';
+            animation: cursor-blink 1s infinite;
+            color: #FF1493;
+            text-shadow: 0 0 5px rgba(255, 20, 147, 0.8);
+        }
+        
+        .team-member.dhairya .member-role {
+            color: #FF1493;
+            text-shadow: 0 0 8px rgba(255, 20, 147, 0.6);
+        }
+        
+        .team-member.dhairya:hover {
+            transform: translateY(-12px) scale(1.08);
+            box-shadow: 
+                0 30px 60px rgba(255, 20, 147, 0.4),
+                0 0 80px rgba(255, 20, 147, 0.3),
+                inset 0 2px 0 rgba(255, 255, 255, 0.25),
+                0 0 0 2px rgba(255, 20, 147, 0.6);
+            backdrop-filter: blur(30px);
+        }
+        
+        .team-member.dhairya:hover::before {
+            opacity: 0.5;
+        }
+        
+        /* CODING TEAM - Matrix/Digital Theme (for Amritanshu) with neon pink theme */
+        .team-member.coding {
+            border: 1px solid rgba(255, 20, 147, 0.5);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                0 0 20px rgba(255, 20, 147, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 0 1px rgba(255, 20, 147, 0.3);
+        }
+        
+        .team-member.coding::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, transparent 0%, rgba(255, 20, 147, 0.15) 50%, transparent 100%),
+                linear-gradient(0deg, transparent 0%, rgba(255, 20, 147, 0.08) 50%, transparent 100%);
+            background-size: 50px 100%, 100% 50px;
+            animation: matrix-scan 2s linear infinite;
+            z-index: -1;
+        }
+        
+        .team-member.coding::after {
+            content: '{ } < / >';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7em;
+            color: rgba(255, 20, 147, 0.6);
+            animation: code-float 3s ease-in-out infinite;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
+        }
+        
+        .team-member.coding .member-name::after {
+            content: '█';
+            animation: cursor-blink 1s infinite;
+            color: #FF1493;
+            text-shadow: 0 0 5px rgba(255, 20, 147, 0.8);
+        }
+        
+        .team-member.coding .member-role {
+            color: #FF1493;
+            text-shadow: 0 0 8px rgba(255, 20, 147, 0.6);
+        }
+        
+        .team-member.coding:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(255, 20, 147, 0.35),
+                0 0 60px rgba(255, 20, 147, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                0 0 0 1px rgba(255, 20, 147, 0.5);
+            backdrop-filter: blur(25px);
+        }
+        
+        /* PHYSICAL MODEL TEAM - Molecular/Atomic Theme */
+        .team-member.physical::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(76, 175, 80, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 80% 80%, rgba(33, 150, 243, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 60%, rgba(255, 193, 7, 0.1) 1.5px, transparent 1.5px);
+            background-size: 30px 30px, 25px 25px, 35px 35px;
+            animation: molecular-orbit 6s linear infinite;
+            z-index: -1;
+        }
+        
+        .team-member.physical::after {
+            content: '⚛️';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1em;
+            animation: atom-spin 4s linear infinite;
+            z-index: 1;
+        }
+        
+        .team-member.physical .member-name {
+            animation: molecular-vibrate 2s ease-in-out infinite;
+        }
+        
+        .team-member.physical .member-role {
+            animation: atom-glow 3s ease-in-out infinite alternate;
+        }
+        
+        .team-member.physical:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(76, 175, 80, 0.25),
+                0 0 60px rgba(33, 150, 243, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                0 0 0 1px rgba(76, 175, 80, 0.4);
+            backdrop-filter: blur(25px);
+        }
+        
+        /* TEAM LEADER - Crown/Leadership Theme */
+        .team-member.leader {
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            background: linear-gradient(
+                135deg, 
+                rgba(255, 215, 0, 0.15) 0%, 
+                rgba(255, 193, 7, 0.1) 25%,
+                rgba(255, 255, 255, 0.08) 50%, 
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            box-shadow: 
+                0 12px 40px rgba(255, 215, 0, 0.25),
+                0 0 30px rgba(255, 215, 0, 0.15),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                0 0 0 1px rgba(255, 215, 0, 0.3);
+        }
+        
+        .team-member.leader::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 70% 70%, rgba(255, 193, 7, 0.1) 1.5px, transparent 1.5px),
+                linear-gradient(45deg, rgba(255, 215, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 215, 0, 0.05) 75%);
+            background-size: 40px 40px, 30px 30px, 25px 25px;
+            animation: crown-sparkle 4s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        .team-member.leader::after {
+            content: '👑';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1.2em;
+            animation: crown-glow 3s ease-in-out infinite alternate;
+            z-index: 1;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+        }
+        
+        .team-member.leader .member-name {
+            color: #FFD700;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .team-member.leader .member-role {
+            color: #FFC107;
+            font-weight: 600;
+        }
+        
+        .team-member.leader:hover {
+            transform: translateY(-12px) scale(1.08);
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 
+                0 30px 60px rgba(255, 215, 0, 0.35),
+                0 0 80px rgba(255, 215, 0, 0.25),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3),
+                0 0 0 2px rgba(255, 215, 0, 0.5);
+            backdrop-filter: blur(30px);
+        }
+        
+        /* PPT TEAM - Presentation/Slide Theme */
+        .team-member.ppt::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, 
+                    rgba(255, 193, 7, 0.05) 25%, 
+                    transparent 25%, 
+                    transparent 75%, 
+                    rgba(255, 193, 7, 0.05) 75%
+                ),
+                linear-gradient(-45deg, 
+                    rgba(255, 87, 34, 0.05) 25%, 
+                    transparent 25%, 
+                    transparent 75%, 
+                    rgba(255, 87, 34, 0.05) 75%
+                );
+            background-size: 20px 20px, 20px 20px;
+            animation: slide-transition 5s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        .team-member.ppt::after {
+            content: '📊';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 1em;
+            animation: chart-bounce 2s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        .team-member.ppt .member-name {
+            animation: slide-in 2.5s ease-in-out infinite;
+        }
+        
+        .team-member.ppt .member-role {
+            animation: presentation-pulse 2s ease-in-out infinite alternate;
+        }
+        
+        .team-member.ppt:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 
+                0 25px 50px rgba(255, 193, 7, 0.25),
+                0 0 60px rgba(255, 87, 34, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                0 0 0 1px rgba(255, 193, 7, 0.4);
+            backdrop-filter: blur(25px);
+        }
+        
+        /* ANIMATIONS */
+        @keyframes matrix-scan {
+            0% { background-position: -100px 0, 0 -100px; }
+            100% { background-position: 100px 0, 0 100px; }
+        }
+        
+        @keyframes code-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-3px) rotate(2deg); opacity: 0.6; }
+        }
+        
+        @keyframes cursor-blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        @keyframes molecular-orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes atom-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        @keyframes slide-transition {
+            0%, 100% { background-position: 0 0, 0 0; opacity: 0.5; }
+            25% { background-position: 10px 0, -10px 0; opacity: 0.7; }
+            50% { background-position: 20px 0, -20px 0; opacity: 0.9; }
+            75% { background-position: 10px 0, -10px 0; opacity: 0.7; }
+        }
+        
+        @keyframes chart-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-2px) scale(1.1); }
+        }
+        
+        /* TEXT ANIMATIONS */
+        @keyframes typewriter {
+            0% { width: 0; }
+            50% { width: 100%; }
+            100% { width: 0; }
+        }
+        
+        @keyframes code-glow {
+            0% { text-shadow: 0 0 5px rgba(76, 175, 80, 0.3); }
+            100% { text-shadow: 0 0 15px rgba(76, 175, 80, 0.8); }
+        }
+        
+        @keyframes molecular-vibrate {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-1px) rotate(-0.5deg); }
+            75% { transform: translateX(1px) rotate(0.5deg); }
+        }
+        
+        @keyframes atom-glow {
+            0% { text-shadow: 0 0 5px rgba(76, 175, 80, 0.4); color: #4CAF50; }
+            100% { text-shadow: 0 0 12px rgba(33, 150, 243, 0.6); color: #2196F3; }
+        }
+        
+        @keyframes slide-in {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(3px); }
+        }
+        
+        @keyframes presentation-pulse {
+            0% { text-shadow: 0 0 5px rgba(255, 193, 7, 0.4); }
+            100% { text-shadow: 0 0 12px rgba(255, 87, 34, 0.6); }
+        }
+        
+        @keyframes crown-sparkle {
+            0%, 100% { 
+                background-position: 0 0, 0 0, 0 0;
+                opacity: 0.6;
+            }
+            33% { 
+                background-position: 20px 0, -15px 0, 10px 0;
+                opacity: 0.8;
+            }
+            66% { 
+                background-position: -20px 0, 15px 0, -10px 0;
+                opacity: 1;
+            }
+        }
+        
+        @keyframes crown-glow {
+            0% { 
+                transform: rotate(-5deg) scale(1);
+                filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+            }
+            100% { 
+                transform: rotate(5deg) scale(1.1);
+                filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.9));
+            }
+        }
+        
+        .team-credits {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(76, 175, 80, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+        }
+        
+        .credits-title {
+            color: #4CAF50;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .team-member {
+                padding: 12px;
+                min-height: 90px;
+            }
+            
+            .member-name {
+                font-size: 0.95em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .team-member {
+                padding: 10px;
+                min-height: 80px;
+            }
+            
+            .member-name {
+                font-size: 0.9em;
+            }
+            
+            .member-role {
+                font-size: 0.75em;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1 class="hero-title" id="animatedTitle">🧬 Protein Analysis Hub</h1>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number" id="fileCount">-</span>
+                    <span class="stat-label">Proteins Available</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Uptime</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">60fps</span>
+                    <span class="stat-label">Rendering</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Services Section -->
+            <div class="services-section">
+                <h2 class="section-title">🚀 Core Services</h2>
+                
+                <div class="services-grid">
+                    <a href="/upload.html" class="service-card">
+                        <div class="service-icon">📄</div>
+                        <h3 class="service-title">Upload Portal</h3>
+                        <p class="service-description">
+                            Secure PDB file upload with drag-and-drop interface. Instant processing and validation with comprehensive error handling.
+                        </p>
+                        <ul class="service-features">
+                            <li>Drag & Drop Interface</li>
+                            <li>Real-time Upload Progress</li>
+                            <li>File Validation & Processing</li>
+                            <li>Secure Cloud Storage</li>
+                        </ul>
+                    </a>
+                    
+                    <a href="/simple-viewer.html" class="service-card">
+                        <div class="service-icon">🔬</div>
+                        <h3 class="service-title">3D Molecular Viewer</h3>
+                        <p class="service-description">
+                            Professional-grade 3D protein visualization with interactive controls, detailed analysis, and scientific accuracy.
+                        </p>
+                        <ul class="service-features">
+                            <li>Interactive 3D Controls</li>
+                            <li>Detailed Protein Information</li>
+                            <li>Element & Chain Coloring</li>
+                            <li>Real-time Structure Analysis</li>
+                        </ul>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Features Section -->
+            <div class="features-section">
+                <h2 class="section-title">✨ Advanced Features</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h4 class="feature-title">Scientific Visualization</h4>
+                        <p class="feature-description">Accurate molecular representation with van der Waals radii, bond visualization, and aromatic ring detection</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h4 class="feature-title">High Performance</h4>
+                        <p class="feature-description">Hardware-accelerated rendering with 60fps interactions, momentum physics, and smooth animations</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4 class="feature-title">Comprehensive Analysis</h4>
+                        <p class="feature-description">Detailed protein information including composition, dimensions, residue types, and structural statistics</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎮</div>
+                        <h4 class="feature-title">Interactive Controls</h4>
+                        <p class="feature-description">Intuitive mouse and keyboard controls with momentum, panning, zooming, and contextual help system</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h4 class="feature-title">Responsive Design</h4>
+                        <p class="feature-description">Optimized for all devices with adaptive layouts, touch support, and consistent experience across platforms</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4 class="feature-title">Secure & Reliable</h4>
+                        <p class="feature-description">Enterprise-grade security with encrypted storage, data validation, and robust error handling</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Status Section -->
+            <div class="status-section">
+                <h3 class="status-title">🔄 System Status</h3>
+                <div class="status-content">
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>API Server Online</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>3D Renderer Active</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span id="storageStatus">Storage Available</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Team Footer -->
+    <footer class="team-footer">
+        <div class="team-container">
+            <h3 class="team-title">👥 Meet Our Team</h3>
+            
+            <div class="team-grid">
+                <div class="team-member leader">
+                    <div class="member-name">Anushka Agarwal</div>
+                    <div class="member-role">Team Leader</div>
+                </div>
+                
+                <div class="team-member physical">
+                    <div class="member-name">Riya Dhingra</div>
+                    <div class="member-role">Physical Model</div>
+                </div>
+                
+                <div class="team-member physical">
+                    <div class="member-name">Om Singh</div>
+                    <div class="member-role">Physical Model</div>
+                </div>
+                
+                <div class="team-member ppt">
+                    <div class="member-name">Rajshri Chakraborty</div>
+                    <div class="member-role">PPT</div>
+                </div>
+                
+                <div class="team-member ppt">
+                    <div class="member-name">Harshit Agarwal</div>
+                    <div class="member-role">PPT</div>
+                </div>
+                
+                <div class="team-member ppt">
+                    <div class="member-name">Simhadri Pranav Sai</div>
+                    <div class="member-role">PPT</div>
+                </div>
+                
+                <div class="team-member dhairya">
+                    <div class="member-name">Dhairya</div>
+                    <div class="member-role">Coding</div>
+                </div>
+                
+                <div class="team-member coding">
+                    <div class="member-name" style="white-space: nowrap;">Amritanshu Shreshth</div>
+                    <div class="member-role">Coding</div>
+                </div>
+            </div>
+            
+            <div class="team-credits">
+                <div class="credits-title">Protein Analysis Hub</div>
+                <p>Built with ❤️ for molecular visualization and scientific discovery</p>
+                <p>© 2024 - Advanced 3D Protein Structure Analysis Platform</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced system status check
+        async function checkSystemStatus() {
+            try {
+                const response = await fetch('/api/files');
+                if (response.ok) {
+                    const data = await response.json();
+                    // Update file count with animation
+                    const fileCountElement = document.getElementById('fileCount');
+                    gsap.to(fileCountElement, {
+                        textContent: data.files.length,
+                        duration: 1.5,
+                        ease: "power2.out",
+                        snap: { textContent: 1 }
+                    });
+                    
+                    // Update storage status
+                    document.getElementById('storageStatus').textContent = 
+                        `${data.files.length} Files Stored`;
+                } else {
+                    document.getElementById('fileCount').textContent = '0';
+                    document.getElementById('storageStatus').textContent = 'Service Unavailable';
+                    // Change status dots to warning color
+                    document.querySelectorAll('.status-dot').forEach(dot => {
+                        dot.style.background = '#ff9800';
+                    });
+                }
+            } catch (error) {
+                console.error('Status check failed:', error);
+                document.getElementById('fileCount').textContent = '?';
+                document.getElementById('storageStatus').textContent = 'Connection Error';
+                // Change status dots to error color
+                document.querySelectorAll('.status-dot').forEach(dot => {
+                    dot.style.background = '#f44336';
+                });
+            }
+        }
+        
+        // Split title into animated characters
+        function initTitleAnimation() {
+            const title = document.getElementById('animatedTitle');
+            const text = title.textContent;
+            title.innerHTML = '';
+            
+            // Split text into characters while preserving spaces and emoji
+            Array.from(text).forEach((char, index) => {
+                const span = document.createElement('span');
+                span.className = 'char';
+                span.style.setProperty('--char-index', index);
+                span.textContent = char;
+                if (char === ' ') {
+                    span.style.width = '0.3em';
+                    span.style.display = 'inline-block';
+                }
+                title.appendChild(span);
+            });
+        }
+        
+        // Page loading animations
+        function initAnimations() {
+            // Initialize title character animation
+            initTitleAnimation();
+            
+            // Animate hero section (without hiding it initially)
+            gsap.fromTo('.hero-title', 
+                { y: -30, scale: 0.9 },
+                { y: 0, scale: 1, duration: 1.2, ease: 'power3.out' }
+            );
+            
+            // Animate stats
+            gsap.fromTo('.stat-item',
+                { opacity: 0, scale: 0.8 },
+                { opacity: 1, scale: 1, duration: 0.8, delay: 0.6, stagger: 0.1, ease: 'back.out(1.7)' }
+            );
+            
+            // Animate service cards
+            gsap.fromTo('.service-card',
+                { opacity: 0, y: 60 },
+                { opacity: 1, y: 0, duration: 1, delay: 0.8, stagger: 0.2, ease: 'power3.out' }
+            );
+            
+            // Animate feature cards
+            gsap.fromTo('.feature-card',
+                { opacity: 0, scale: 0.9 },
+                { opacity: 1, scale: 1, duration: 0.8, delay: 1.2, stagger: 0.1, ease: 'power2.out' }
+            );
+            
+            // Animate team members
+            gsap.fromTo('.team-member',
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.6, delay: 1.5, stagger: 0.1, ease: 'power2.out' }
+            );
+        }
+        
+        // Initialize everything on load
+        window.addEventListener('load', () => {
+            initAnimations();
+            setTimeout(checkSystemStatus, 500); // Delay to let animations start
+        });
+        
+        // Add hover effects to service cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card.querySelector('.service-icon'), {
+                        rotation: 360,
+                        duration: 0.6,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+        });
+        
+        console.log('🧬 Enhanced Protein Analysis Hub loaded with dark mode UI');
+    </script>
+</body>
+</html>

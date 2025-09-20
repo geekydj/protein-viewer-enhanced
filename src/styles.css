@@ -1,0 +1,673 @@
+/* Enhanced Protein 3D Viewer Styles */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  color: #ffffff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Header & Navigation */
+header {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+nav h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #64ffda, #00bcd4, #3f51b5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Main Content */
+main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Hero Section */
+.hero {
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.hero h2 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #ffffff, #64ffda, #00bcd4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: #b0bec5;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Upload Section */
+.upload-section {
+  margin: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #00bcd4, #3f51b5);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 188, 212, 0.3);
+  border: none;
+}
+
+.upload-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 188, 212, 0.4);
+}
+
+.upload-button.small {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+/* Status Messages */
+.status {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-align: center;
+  margin: 1rem 0;
+  min-height: 1.5rem;
+}
+
+.status.success {
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  color: #81c784;
+}
+
+.status.error {
+  background: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  color: #e57373;
+}
+
+.status.loading {
+  background: rgba(255, 193, 7, 0.2);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  color: #ffb74d;
+}
+
+.status.info {
+  background: rgba(33, 150, 243, 0.2);
+  border: 1px solid rgba(33, 150, 243, 0.5);
+  color: #64b5f6;
+}
+
+/* Viewer Container */
+.viewer-container {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  min-height: 500px;
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.viewer-container.main-viewer {
+  min-height: 600px;
+  flex: 1;
+}
+
+.viewer-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.viewer-placeholder h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #888;
+}
+
+/* Loading Animation */
+.loading-animation {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.atom {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #64ffda, #00bcd4);
+  animation: bounce 1.4s ease-in-out infinite both;
+}
+
+.atom:nth-child(1) { animation-delay: -0.32s; }
+.atom:nth-child(2) { animation-delay: -0.16s; }
+.atom:nth-child(3) { animation-delay: 0s; }
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Features Section */
+.features {
+  margin: 4rem 0;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #64ffda;
+}
+
+.feature-card p {
+  color: #b0bec5;
+  line-height: 1.6;
+}
+
+/* Viewer Page Layout */
+.viewer-main {
+  padding: 0;
+}
+
+.viewer-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  height: calc(100vh - 140px);
+}
+
+/* Sidebar */
+.sidebar {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebar h3, .sidebar h4 {
+  color: #64ffda;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Protein List */
+.protein-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.protein-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.protein-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}
+
+.protein-item.active {
+  background: rgba(0, 188, 212, 0.2);
+  border-color: rgba(0, 188, 212, 0.5);
+}
+
+.protein-info h4 {
+  color: #ffffff;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.protein-meta {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.load-button {
+  background: linear-gradient(135deg, #00bcd4, #3f51b5);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.load-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+/* Controls */
+.control-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.control-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.upload-new {
+  margin-top: 1rem;
+}
+
+/* Color Controls */
+.color-controls, .motion-controls {
+  margin: 1.5rem 0;
+}
+
+.color-controls h5, .motion-controls h5 {
+  color: #64ffda;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.color-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.25rem;
+}
+
+.color-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.color-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.color-btn.active {
+  background: linear-gradient(135deg, #00bcd4, #3f51b5);
+  border-color: rgba(0, 188, 212, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.toggle-switch input[type="checkbox"] {
+  display: none;
+}
+
+.slider {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slider:before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.toggle-switch input:checked + .slider {
+  background: linear-gradient(135deg, #00bcd4, #3f51b5);
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Protein Info Panel */
+.protein-info-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 1rem;
+}
+
+.protein-info-panel h4 {
+  color: #64ffda;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.protein-details {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.protein-details .info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.protein-details .info-item:last-child {
+  border-bottom: none;
+}
+
+.protein-details .info-label {
+  color: #888;
+  font-weight: 500;
+}
+
+.protein-details .info-value {
+  color: #fff;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+}
+
+.protein-details .pdb-link {
+  color: #00bcd4;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.protein-details .pdb-link:hover {
+  color: #64ffda;
+  text-decoration: underline;
+}
+
+.protein-details .keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.protein-details .keyword {
+  background: rgba(100, 255, 218, 0.1);
+  color: #64ffda;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+/* Info Panel */
+.info-panel ul {
+  list-style: none;
+  color: #888;
+}
+
+.info-panel li {
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Viewer Content */
+.viewer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.viewer-info {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.viewer-info h4 {
+  color: #64ffda;
+  margin-bottom: 0.5rem;
+}
+
+.protein-stats {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.protein-stats span {
+  padding: 0.25rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+/* Empty/Error States */
+.empty-state, .error-state {
+  text-align: center;
+  padding: 2rem;
+  color: #888;
+}
+
+.empty-state h3 {
+  color: #64ffda;
+  margin-bottom: 1rem;
+}
+
+.empty-state a {
+  color: #00bcd4;
+  text-decoration: none;
+}
+
+.empty-state a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 4rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .viewer-layout {
+    grid-template-columns: 300px 1fr;
+  }
+  
+  .hero h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .viewer-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .sidebar {
+    order: 2;
+    max-height: 400px;
+  }
+  
+  .viewer-content {
+    order: 1;
+  }
+  
+  .hero h2 {
+    font-size: 2rem;
+  }
+  
+  nav {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  main {
+    padding: 1rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Barba.js transitions */
+.barba-container {
+  opacity: 1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
