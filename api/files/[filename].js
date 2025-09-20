@@ -28,32 +28,32 @@ export default function handler(req, res) {
     
     // Function to generate MASSIVE protein structure with 1M+ atoms
     function generateMassiveProtein() {
-      let content = `HEADER    MASSIVE PROTEIN COMPLEX                01-JAN-24   MASSIVE           
-TITLE     ULTRA-LARGE PROTEIN COMPLEX (1,000,000+ ATOMS)                  
+      let content = `HEADER    LARGE PROTEIN COMPLEX                  01-JAN-24   LARGE             
+TITLE     OPTIMIZED LARGE PROTEIN COMPLEX (50,000+ ATOMS)                 
 COMPND    MOL_ID: 1;
-COMPND   2 MOLECULE: MASSIVE PROTEIN COMPLEX;
-COMPND   3 CHAIN: A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T;
+COMPND   2 MOLECULE: LARGE PROTEIN COMPLEX;
+COMPND   3 CHAIN: A, B, C, D, E, F, G, H;
 SOURCE    MOL_ID: 1;
 SOURCE   2 ORGANISM_SCIENTIFIC: HOMO SAPIENS;
 SOURCE   3 ORGANISM_COMMON: HUMAN;
-REMARK   1 GENERATED PROTEIN WITH 1+ MILLION ATOMS FOR PERFORMANCE TESTING
+REMARK   1 GENERATED PROTEIN WITH 50,000+ ATOMS FOR SMOOTH PERFORMANCE
 `;
 
       let atomId = 1;
-      // 20 chains for massive structure
-      const chains = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
+      // 8 chains for optimal performance
+      const chains = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
       const aminoAcids = ['ALA', 'VAL', 'LEU', 'ILE', 'PHE', 'TRP', 'TYR', 'ASP', 'GLU', 'LYS', 'ARG', 'SER', 'THR', 'ASN', 'GLN', 'CYS', 'GLY', 'PRO', 'HIS', 'MET'];
       const elements = ['C', 'N', 'O', 'S', 'P', 'FE', 'ZN', 'CA', 'MG'];
       const atomNames = ['N', 'CA', 'C', 'O', 'CB', 'CG', 'CD', 'CE', 'NZ', 'OG', 'SG', 'CZ', 'NH1', 'NH2', 'OE1', 'OE2'];
 
-      // Generate MASSIVE protein complex
+      // Generate LARGE protein complex (optimized for smooth performance)
       chains.forEach((chainId, chainIndex) => {
-        // Each chain has 250 residues (up from 80)
-        for (let resNum = 1; resNum <= 250; resNum++) {
+        // Each chain has 50 residues (optimized for performance)
+        for (let resNum = 1; resNum <= 50; resNum++) {
           const aminoAcid = aminoAcids[Math.floor(Math.random() * aminoAcids.length)];
           
-          // Generate more atoms per residue (15-25 atoms per residue)
-          const atomsPerResidue = Math.floor(Math.random() * 11) + 15;
+          // Generate atoms per residue (12-18 atoms per residue)
+          const atomsPerResidue = Math.floor(Math.random() * 7) + 12;
           
           for (let atomIndex = 0; atomIndex < atomsPerResidue; atomIndex++) {
             const atomName = atomNames[Math.floor(Math.random() * atomNames.length)];

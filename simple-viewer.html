@@ -1515,13 +1515,11 @@
                 const elementAtoms = atomsByElement[element];
                 if (elementAtoms.length === 0) return;
                 
-                // Base geometry and material
-                const geometry = new THREE.SphereGeometry(0.5, 8, 6); // Lower detail for performance
-                const material = new THREE.MeshLambertMaterial({ 
-                    color: getElementColor(element),
-                    transparent: true,
-                    opacity: 0.8
-                });
+                // Base geometry and material (very low detail for performance)
+                const geometry = new THREE.SphereGeometry(0.6, 6, 4); // Ultra-low detail for performance
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: getElementColor(element)
+                }); // No transparency for better performance
                 
                 // Create instanced mesh
                 const instancedMesh = new THREE.InstancedMesh(geometry, material, elementAtoms.length);
@@ -1539,19 +1537,19 @@
                 console.log(`Added ${elementAtoms.length.toLocaleString()} ${element} atoms`);
             });
             
-            // Skip bonds for massive structures (too many to render efficiently)
-            if (atoms.length < 500000) {
-                console.log('Adding bonds for medium-large structure...');
+            // Skip bonds for very large structures (too many to render efficiently)
+            if (atoms.length < 25000) {
+                console.log('Adding bonds for large structure...');
                 createOptimizedBonds(atoms);
             } else {
-                console.log('Skipping bonds for ultra-massive structure (performance)');
+                console.log('Skipping bonds for ultra-large structure (better performance)');
             }
         }
         
         // Create optimized bonds for large structures
         function createOptimizedBonds(atoms) {
             const bonds = [];
-            const maxBonds = 50000; // Limit total bonds for performance
+            const maxBonds = 10000; // Limit total bonds for performance
             
             // Simple distance-based bonding with limits
             for (let i = 0; i < atoms.length && bonds.length < maxBonds; i++) {
@@ -1740,8 +1738,8 @@
             currentProtein = new THREE.Group();
             
             // Choose visualization method based on atom count
-            if (proteinData.atoms.length > 100000) {
-                console.log(`🚀 Using MASSIVE atom visualization for ${proteinData.atoms.length.toLocaleString()} atoms`);
+            if (proteinData.atoms.length > 10000) {
+                console.log(`🚀 Using OPTIMIZED visualization for ${proteinData.atoms.length.toLocaleString()} atoms`);
                 createMassiveAtomVisualization(proteinData.atoms);
             } else {
                 console.log(`💬 Using standard visualization for ${proteinData.atoms.length.toLocaleString()} atoms`);
