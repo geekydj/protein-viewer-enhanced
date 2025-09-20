@@ -1,0 +1,18 @@
+HEADER    TEST PROTEIN                            01-JAN-24   TEST            
+TITLE     SIMPLE TEST PROTEIN STRUCTURE                                   
+ATOM      1  N   ALA A   1      20.154  16.967  12.784  1.00 20.00           N  
+ATOM      2  CA  ALA A   1      20.626  18.286  13.299  1.00 20.00           C  
+ATOM      3  C   ALA A   1      19.530  19.045  14.019  1.00 20.00           C  
+ATOM      4  O   ALA A   1      18.676  18.529  14.728  1.00 20.00           O  
+ATOM      5  CB  ALA A   1      21.153  19.127  12.139  1.00 20.00           C  
+ATOM      6  N   GLY A   2      19.512  20.349  13.880  1.00 20.00           N  
+ATOM      7  CA  GLY A   2      18.510  21.205  14.498  1.00 20.00           C  
+ATOM      8  C   GLY A   2      17.160  20.507  14.683  1.00 20.00           C  
+ATOM      9  O   GLY A   2      16.888  19.465  14.085  1.00 20.00           O  
+ATOM     10  N   SER A   3      16.338  20.954  15.613  1.00 20.00           N  
+ATOM     11  CA  SER A   3      15.035  20.355  15.927  1.00 20.00           C  
+ATOM     12  C   SER A   3      14.170  21.239  16.792  1.00 20.00           C  
+ATOM     13  O   SER A   3      14.433  22.413  17.069  1.00 20.00           O  
+ATOM     14  CB  SER A   3      14.253  19.942  14.681  1.00 20.00           C  
+ATOM     15  OG  SER A   3      14.878  18.926  13.932  1.00 20.00           O  
+END

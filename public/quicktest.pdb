@@ -1,0 +1,7 @@
+﻿HEADER    TEST PROTEIN                            01-JAN-24   TEST            
+ATOM      1  N   ALA A   1      20.154  16.967  12.784  1.00 20.00           N  
+ATOM      2  CA  ALA A   1      20.626  18.286  13.299  1.00 20.00           C  
+ATOM      3  C   ALA A   1      19.530  19.045  14.019  1.00 20.00           C  
+ATOM      4  O   ALA A   1      18.676  18.529  14.728  1.00 20.00           O  
+ATOM      5  CB  ALA A   1      21.153  19.127  12.139  1.00 20.00           C  
+END
