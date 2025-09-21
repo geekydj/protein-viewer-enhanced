@@ -26,17 +26,19 @@ export default function handler(req, res) {
     // Return proper PDB content based on filename
     let pdbContent = '';
     
-    // Function to generate MASSIVE protein structure with 1M+ atoms
-    function generateMassiveProtein() {
+    // Function to generate large protein structure
+    function generateLargeProtein() {
+      console.log('🧬 Generating large protein structure...');
+      
       let content = `HEADER    LARGE PROTEIN COMPLEX                  01-JAN-24   LARGE             
-TITLE     OPTIMIZED LARGE PROTEIN COMPLEX (50,000+ ATOMS)                 
+TITLE     OPTIMIZED LARGE PROTEIN COMPLEX (15,000+ ATOMS)                 
 COMPND    MOL_ID: 1;
 COMPND   2 MOLECULE: LARGE PROTEIN COMPLEX;
 COMPND   3 CHAIN: A, B, C, D, E, F, G, H;
 SOURCE    MOL_ID: 1;
 SOURCE   2 ORGANISM_SCIENTIFIC: HOMO SAPIENS;
 SOURCE   3 ORGANISM_COMMON: HUMAN;
-REMARK   1 GENERATED PROTEIN WITH 50,000+ ATOMS FOR SMOOTH PERFORMANCE
+REMARK   1 GENERATED PROTEIN WITH 15,000+ ATOMS FOR SMOOTH PERFORMANCE
 `;
 
       let atomId = 1;
@@ -92,8 +94,8 @@ REMARK   1 GENERATED PROTEIN WITH 50,000+ ATOMS FOR SMOOTH PERFORMANCE
     }
 
     if (filename === 'hemoglobin_1HHO.pdb') {
-      // Generate MASSIVE protein structure with 1M+ atoms
-      pdbContent = generateMassiveProtein();
+      // Generate large protein structure with 15k+ atoms
+      pdbContent = generateLargeProtein();
     } else {
       // Default simple protein structure
       pdbContent = `HEADER    TEST PROTEIN                           01-JAN-24   TEST              
