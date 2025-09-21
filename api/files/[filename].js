@@ -75,7 +75,8 @@ REMARK   1 GENERATED PROTEIN WITH 15,000+ ATOMS FOR SMOOTH PERFORMANCE
             const y = baseY + helixY + (Math.random() - 0.5) * 25;
             const z = baseZ + helixZ + (Math.random() - 0.5) * 25;
             
-            const atomLine = `ATOM${atomId.toString().padStart(7, ' ')}  ${atomName.padEnd(4)}${aminoAcid} ${chainId}${resNum.toString().padStart(4, ' ')}    ${x.toFixed(3).padStart(8, ' ')}${y.toFixed(3).padStart(8, ' ')}${z.toFixed(3).padStart(8, ' ')}  1.00 20.00           ${element.padEnd(2)}`;
+            // Create proper PDB format with element at position 76-77
+            const atomLine = `ATOM${atomId.toString().padStart(7, ' ')}  ${atomName.padEnd(4)}${aminoAcid} ${chainId}${resNum.toString().padStart(4, ' ')}    ${x.toFixed(3).padStart(8, ' ')}${y.toFixed(3).padStart(8, ' ')}${z.toFixed(3).padStart(8, ' ')}  1.00 20.00          ${element.padEnd(2)}`;
             content += atomLine + '\n';
             
             atomId++;

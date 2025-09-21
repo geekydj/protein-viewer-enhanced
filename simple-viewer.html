@@ -1875,7 +1875,15 @@
                     const x = parseFloat(line.substring(30, 38));
                     const y = parseFloat(line.substring(38, 46));
                     const z = parseFloat(line.substring(46, 54));
-                    const element = line.substring(76, 78).trim() || atomName.substring(0, 1);
+                    // More robust element parsing - try multiple positions
+                    let element = line.substring(76, 78).trim();
+                    if (!element) {
+                        // Fallback to atom name first character
+                        element = atomName.substring(0, 1).replace(/[0-9]/g, '').trim();
+                        if (!element) {
+                            element = 'C'; // Default to carbon
+                        }
+                    }
                     
                     if (!isNaN(x) && !isNaN(y) && !isNaN(z)) {
                         const atom = {
@@ -1892,6 +1900,11 @@
                         };
                         
                         atoms.push(atom);
+                        
+                        // Debug first few atoms
+                        if (atoms.length <= 3) {
+                            console.log(`   Atom ${atoms.length}: ${atomName} (${element}) at (${x.toFixed(1)}, ${y.toFixed(1)}, ${z.toFixed(1)})`);
+                        }
                         
                         // Group atoms by chain
                         if (!chains[chainId]) {
