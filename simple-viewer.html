@@ -1515,8 +1515,8 @@
                 const elementAtoms = atomsByElement[element];
                 if (elementAtoms.length === 0) return;
                 
-                // Base geometry and material (very low detail for performance)
-                const geometry = new THREE.SphereGeometry(0.6, 6, 4); // Ultra-low detail for performance
+                // Base geometry and material (larger atoms for better visibility)
+                const geometry = new THREE.SphereGeometry(1.2, 8, 6); // Larger atoms for visibility
                 const material = new THREE.MeshBasicMaterial({ 
                     color: getElementColor(element)
                 }); // No transparency for better performance
@@ -1764,25 +1764,50 @@
             // Move protein to center
             currentProtein.position.sub(center);
             
-            // Scale protein to fit in view
+            // Scale protein to fit in view - much more aggressive scaling
             const maxDimension = Math.max(size.x, size.y, size.z);
-            const scale = maxDimension > 0 ? 50 / maxDimension : 1;
+            let scale;
+            if (maxDimension > 200) {
+                scale = 100 / maxDimension; // Very large proteins
+            } else if (maxDimension > 50) {
+                scale = 80 / maxDimension;  // Large proteins
+            } else {
+                scale = 30 / maxDimension;  // Normal proteins
+            }
             currentProtein.scale.setScalar(scale);
             
-            // Adjust camera position based on protein size
-            const cameraDistance = Math.max(80, maxDimension * scale * 2);
-            camera.position.set(cameraDistance * 0.7, cameraDistance * 0.5, cameraDistance);
+            // Much closer camera positioning for better visibility
+            const scaledSize = maxDimension * scale;
+            const cameraDistance = Math.max(40, scaledSize * 1.5);
+            camera.position.set(0, 0, cameraDistance);
             camera.lookAt(0, 0, 0);
             
-            console.log(`Protein dimensions: ${size.x.toFixed(1)} x ${size.y.toFixed(1)} x ${size.z.toFixed(1)}`);
-            console.log(`Applied scale: ${scale.toFixed(3)}, Camera distance: ${cameraDistance.toFixed(1)}`);
+            console.log(`🧬 PROTEIN LOADED:`);
+            console.log(`   Dimensions: ${size.x.toFixed(1)} x ${size.y.toFixed(1)} x ${size.z.toFixed(1)}`);
+            console.log(`   Max dimension: ${maxDimension.toFixed(1)}`);
+            console.log(`   Applied scale: ${scale.toFixed(3)}`);
+            console.log(`   Scaled size: ${scaledSize.toFixed(1)}`);
+            console.log(`   Camera distance: ${cameraDistance.toFixed(1)}`);
+            console.log(`   Camera position:`, camera.position);
             
             scene.add(currentProtein);
+            
+            // Force render update
+            renderer.render(scene, camera);
             
             // Show controls help on first load
             if (selectedFileIndex === 0) {
                 setTimeout(showControlsOnFirstLoad, 1000);
             }
+            
+            // Debug protein visibility
+            setTimeout(() => {
+                debugProteinVisibility();
+                // Add test spheres if protein isn't visible
+                if (currentProtein.children.length === 0) {
+                    addTestSpheres();
+                }
+            }, 500);
             
             console.log(`✅ Loaded ${filename} with ${proteinData.atoms.length} atoms, ${Object.keys(proteinData.chains).length} chains`);
             
@@ -2125,6 +2150,54 @@
             setTimeout(() => {
                 document.getElementById('status').style.display = 'none';
             }, duration);
+        }
+        
+        function debugProteinVisibility() {
+            if (currentProtein) {
+                console.log('🔍 DEBUGGING PROTEIN VISIBILITY:');
+                console.log('   Children count:', currentProtein.children.length);
+                console.log('   Position:', currentProtein.position);
+                console.log('   Scale:', currentProtein.scale);
+                console.log('   Rotation:', currentProtein.rotation);
+                
+                const box = new THREE.Box3().setFromObject(currentProtein);
+                const size = box.getSize(new THREE.Vector3());
+                console.log('   Current bounds:', size);
+                
+                if (currentProtein.children.length === 0) {
+                    console.log('❌ NO CHILDREN - Protein not rendered!');
+                    showStatusMessage('Error: Protein has no visible atoms!', 5000);
+                } else {
+                    console.log('✅ Protein has', currentProtein.children.length, 'visible elements');
+                    showStatusMessage(`Protein loaded with ${currentProtein.children.length} elements`);
+                }
+            }
+        }
+        
+        function addTestSpheres() {
+            console.log('🟡 Adding test spheres for debugging...');
+            
+            // Add a few large test spheres to verify rendering works
+            const colors = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff];
+            for (let i = 0; i < 5; i++) {
+                const geometry = new THREE.SphereGeometry(3, 16, 12);
+                const material = new THREE.MeshBasicMaterial({ color: colors[i] });
+                const sphere = new THREE.Mesh(geometry, material);
+                
+                sphere.position.set(
+                    (i - 2) * 8,
+                    0,
+                    0
+                );
+                
+                currentProtein.add(sphere);
+            }
+            
+            // Position camera to see test spheres
+            camera.position.set(0, 0, 30);
+            camera.lookAt(0, 0, 0);
+            
+            showStatusMessage('Added test spheres - you should see 5 colored spheres!');
         }
         
         function formatFileSize(bytes) {
