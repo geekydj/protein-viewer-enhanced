@@ -1756,15 +1756,26 @@
                 createAromaticRings(proteinData.atoms);
             }
             
-            // Center and scale protein
+            // Center and scale protein with better visibility
             const box = new THREE.Box3().setFromObject(currentProtein);
             const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            
+            // Move protein to center
             currentProtein.position.sub(center);
             
-            const size = box.getSize(new THREE.Vector3());
+            // Scale protein to fit in view
             const maxDimension = Math.max(size.x, size.y, size.z);
-            const scale = 30 / maxDimension;
+            const scale = maxDimension > 0 ? 50 / maxDimension : 1;
             currentProtein.scale.setScalar(scale);
+            
+            // Adjust camera position based on protein size
+            const cameraDistance = Math.max(80, maxDimension * scale * 2);
+            camera.position.set(cameraDistance * 0.7, cameraDistance * 0.5, cameraDistance);
+            camera.lookAt(0, 0, 0);
+            
+            console.log(`Protein dimensions: ${size.x.toFixed(1)} x ${size.y.toFixed(1)} x ${size.z.toFixed(1)}`);
+            console.log(`Applied scale: ${scale.toFixed(3)}, Camera distance: ${cameraDistance.toFixed(1)}`);
             
             scene.add(currentProtein);
             
@@ -2074,13 +2085,31 @@
         }
         
         function resetView() {
-            camera.position.set(0, 0, 30);
             if (currentProtein) {
+                // Reset rotation
                 currentProtein.rotation.set(0, 0, 0);
-                // Center the protein in view
+                
+                // Center the protein
                 const box = new THREE.Box3().setFromObject(currentProtein);
                 const center = box.getCenter(new THREE.Vector3());
+                const size = box.getSize(new THREE.Vector3());
                 currentProtein.position.sub(center);
+                
+                // Position camera appropriately
+                const maxDimension = Math.max(size.x, size.y, size.z);
+                const cameraDistance = Math.max(80, maxDimension * 2);
+                
+                gsap.to(camera.position, {
+                    x: cameraDistance * 0.7,
+                    y: cameraDistance * 0.5,
+                    z: cameraDistance,
+                    duration: 1,
+                    ease: 'power2.inOut',
+                    onComplete: () => {
+                        camera.lookAt(0, 0, 0);
+                        showStatusMessage('View reset and protein centered');
+                    }
+                });
             }
         }
         
@@ -2089,6 +2118,13 @@
             status.textContent = message;
             status.className = `status ${type}`;
             status.style.display = 'block';
+        }
+        
+        function showStatusMessage(message, duration = 2000) {
+            showStatus(message, 'success');
+            setTimeout(() => {
+                document.getElementById('status').style.display = 'none';
+            }, duration);
         }
         
         function formatFileSize(bytes) {
